@@ -1,0 +1,2 @@
+id,nome,imagem,grupo,itens,dataCriacao
+1;churrasco;;1;1,2;2023-11-26T10:00:00

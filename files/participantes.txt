@@ -1,0 +1,5 @@
+id,nome,email,telefone,foto,grupos,datacriacao
+1;hugo;hugo@email.com;31999999999;;1;2023-11-25T10:10:10
+2;raphael;raphael@email.com;31988888888;;1;2023-11-25T10:10:10
+3;pablo;pablo@email.com;31977777777;;;2023-11-22T10:10:10
+4;diego;diego@email.com;31966666666;;;2023-11-21T10:10:10
