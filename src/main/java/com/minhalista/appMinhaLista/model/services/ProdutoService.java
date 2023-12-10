@@ -12,14 +12,16 @@ import java.util.Optional;
 public class ProdutoService {
 
     @Autowired
-    ProdutoRepository produtoRepository;
+    private ProdutoRepository produtoRepository;
 
     public void incluir(Produto produto) {
         produtoRepository.save(produto);
     }
+
     public Collection<Produto> listar() {
         return (Collection<Produto>) produtoRepository.findAll();
     }
+
     public Optional<Produto> buscar(Integer id) {
         return produtoRepository.findById(id);
     }
