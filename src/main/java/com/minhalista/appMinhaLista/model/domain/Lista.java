@@ -1,18 +1,40 @@
 package com.minhalista.appMinhaLista.model.domain;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+
+@Entity
+@Table(name = "listas")
 public class Lista {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
     private String imagem;
+    @ManyToOne
+    @JoinColumn(name = "grupoId")
     private Grupo grupo;
-    private List<Item> itens = new ArrayList<Item>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "itens",
+            joinColumns = @JoinColumn(name = "listaId"),
+            inverseJoinColumns = @JoinColumn(name = "produtoId")
+    )
+    private List<Produto> produtos;
     private LocalDateTime dataCriacao;
 
     public Lista(Integer id, String nome, Grupo grupo) {
@@ -22,61 +44,13 @@ public class Lista {
         this.dataCriacao = LocalDateTime.now();
     }
 
-    public Integer getId() {
-        return id;
-    }
+//    public void setItem(Item item) {
+//        this.itens.add(item);
+//    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
-    }
-
-    public Grupo getGrupo() {
-        return grupo;
-    }
-
-    public void setGrupo(Grupo grupo) {
-        this.grupo = grupo;
-    }
-
-    public List<Item> getItens() {
-        return itens;
-    }
-
-    public void setItem(Item item) {
-        this.itens.add(item);
-    }
-
-    public void setItens(List<Item> itens) {
-        this.itens = itens;
-    }
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("nome (%s) - grupo (%s) - itens (%s)",
-                nome, grupo.getNome(), itens);
-    }
+//    @Override
+//    public String toString() {
+//        return String.format("nome (%s) - grupo (%s) - itens (%s)",
+//                nome, grupo.getNome(), itens);
+//    }
 }
