@@ -11,12 +11,14 @@ public class Integrante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "usuarioId")
     private Usuario usuario;
+
     @ManyToOne
     @JoinColumn(name = "grupoId")
     private Grupo grupo;
-    private LocalDateTime dataAdicao;
 
+    private LocalDateTime dataAdicao;
 }
