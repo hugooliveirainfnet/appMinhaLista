@@ -28,29 +28,37 @@ public class Lista {
     @JoinColumn(name = "grupoId")
     private Grupo grupo;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "itens",
             joinColumns = @JoinColumn(name = "listaId"),
             inverseJoinColumns = @JoinColumn(name = "produtoId")
     )
     private List<Produto> produtos;
+
+    @OneToMany(mappedBy = "lista", fetch = FetchType.EAGER)
+    private List<Item> itens = new ArrayList<Item>();
     private LocalDateTime dataCriacao;
 
-    public Lista(Integer id, String nome, Grupo grupo) {
-        this.id = id;
+    public Lista(String nome, Grupo grupo) {
         this.nome = nome;
         this.grupo = grupo;
         this.dataCriacao = LocalDateTime.now();
     }
 
-//    public void setItem(Item item) {
-//        this.itens.add(item);
-//    }
+    public Double calcularValorTotalLista() {
+        Double valorTotal = 0.0;
+        for (Item item : itens) {
+            Double valorItem = item.getProduto().getPreco();
+            int quantidade = item.getQuantidade();
+            valorTotal += valorItem * quantidade;
+        }
+        return valorTotal;
+    }
 
-//    @Override
-//    public String toString() {
-//        return String.format("nome (%s) - grupo (%s) - itens (%s)",
-//                nome, grupo.getNome(), itens);
-//    }
+    @Override
+    public String toString() {
+        return String.format("nome (%s) - grupo (%s)",
+                nome, grupo.getNome());
+    }
 }

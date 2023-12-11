@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,42 +26,34 @@ public class Grupo {
     private String nome;
     private String imagem;
 
-    @ManyToMany(mappedBy = "grupos")
-    private List<Usuario> usuarios;
+    @ManyToMany(mappedBy = "grupos", fetch = FetchType.EAGER)
+    private List<Usuario> usuarios = new ArrayList<Usuario>();
 
-    @OneToMany(cascade = CascadeType.DETACH)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "grupoId")
     private List<Lista> listas;
     private LocalDateTime dataCriacao;
 
-    public Grupo(Integer id, String nome) {
-        this.id = id;
+    public Grupo(String nome, Usuario usuario) {
         this.nome = nome;
-        this.dataCriacao = LocalDateTime.now();
-    }
-    public Grupo(Integer id, String nome, Usuario usuario) {
-        this.id = id;
-        this.nome = nome;
+        this.usuarios.add(usuario);
         this.dataCriacao = LocalDateTime.now();
     }
 
-//    public void setUsuario(Usuario usuario) {
-//        this.usuarios.add(usuario);
-//    }
-//
-//    public void setLista(Lista lista) { this.listas.add(lista); }
+    public void setUsuario(Usuario usuario) {
+        this.usuarios.add(usuario);
+    }
 
-//    @Override
-//    public String toString() {
-//        List<String> participantes = usuarios.stream()
-//                .map(Usuario::getNome) // Extrai o nome de cada Grupo
-//                .collect(Collectors.toList());
-//
-//        List<String> nomelistas = listas.stream()
-//                .map(Lista::getNome) // Extrai o nome de cada Grupo
-//                .collect(Collectors.toList());
-//
-//        return String.format("nome (%s) - imagem (%s) - dataCriacao (%s) - participantes (%s) - listas (%s)",
-//                nome, imagem, dataCriacao, participantes, nomelistas);
-//    }
+    public void setLista(Lista lista) { this.listas.add(lista); }
+
+    @Override
+    public String toString() {
+        List<String> participantes = usuarios.stream()
+                .map(Usuario::getNome) // Extrai o nome de cada Grupo
+                .collect(Collectors.toList());
+
+
+        return String.format("nome (%s) - imagem (%s) - dataCriacao (%s) - participantes (%s)",
+                nome, imagem, dataCriacao, participantes);
+    }
 }
