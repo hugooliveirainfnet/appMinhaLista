@@ -1,0 +1,5 @@
+nome,email,telefone
+hugo;hugo@email.com;31999999999
+raphael;raphael@email.com;31988888888
+pablo;pablo@email.com;31977777777
+diego;diego@email.com;31966666666
