@@ -1,13 +1,13 @@
 package com.minhalista.appMinhaLista;
 
-import com.minhalista.appMinhaLista.model.domain.Grupo;
 import com.minhalista.appMinhaLista.model.domain.Item;
-import com.minhalista.appMinhaLista.model.domain.Participante;
+import com.minhalista.appMinhaLista.model.domain.Lista;
 import com.minhalista.appMinhaLista.model.domain.Produto;
-import com.minhalista.appMinhaLista.model.service.GrupoService;
-import com.minhalista.appMinhaLista.model.service.ItemService;
-import com.minhalista.appMinhaLista.model.service.ParticipanteService;
-import com.minhalista.appMinhaLista.model.service.ProdutoService;
+import com.minhalista.appMinhaLista.model.domain.Usuario;
+import com.minhalista.appMinhaLista.model.services.ItemService;
+import com.minhalista.appMinhaLista.model.services.ListaService;
+import com.minhalista.appMinhaLista.model.services.ProdutoService;
+import com.minhalista.appMinhaLista.model.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
-@Order(4)
+@Order(5)
 @Component
 public class ItemLoader implements ApplicationRunner {
 
@@ -27,28 +27,37 @@ public class ItemLoader implements ApplicationRunner {
     private ItemService itemService;
 
     @Autowired
+    private ListaService listaService;
+
+    @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        final int AMOUNT = 0;
+        final int AMOUNT_PAY= 1;
+        final int PRODUCT = 2;
+        final int LIST = 3;
+
         FileReader itemFile = new FileReader("files/itens.txt");
         BufferedReader itemBuffer = new BufferedReader(itemFile);
 
-        FileReader produtoFile = new FileReader("files/produtos.txt");
-        BufferedReader produtoBuffer = new BufferedReader(produtoFile);
-        produtos(produtoBuffer);
-
         String linha = itemBuffer.readLine();
-        String[] atributos = null;
+        String[] atributos = {};
 
         int numeroLinha = 0;
         while (linha != null) {
             atributos = linha.split(";");
             if(numeroLinha !=0) {
 
-                Produto produto = produtoService.buscar(Integer.valueOf(atributos[2]));
-                Item item = new Item(Integer.valueOf(atributos[0]), Double.valueOf(atributos[1]), produto);
+                Produto produto = produtoService.buscar(Integer.valueOf(atributos[PRODUCT])).get();
+                Lista lista = listaService.buscar(Integer.valueOf(atributos[LIST])).get();
+
+                Item item = new Item(Integer.valueOf(atributos[AMOUNT]), Double.valueOf(atributos[AMOUNT_PAY]), produto, lista);
                 itemService.incluir(item);
 
             }
@@ -59,28 +68,14 @@ public class ItemLoader implements ApplicationRunner {
         for(Item item : itemService.listar()){
             System.out.println("[ITEM] " + item);
         }
-        System.out.print("\n");
 
-        produtoBuffer.close();
+        Optional<Usuario> usuario = usuarioService.buscar(1);
+        Double valor = usuario.get().getGrupos().get(0).getListas().get(0).calcularValorTotalLista();
+
+        System.out.println("Valor total "+valor);
+
+        System.out.print("\n");
         itemBuffer.close();
     }
 
-    private void produtos (BufferedReader bufferedReader) throws IOException {
-
-        String linha = bufferedReader.readLine();
-        String[] atributos = null;
-
-        int numeroLinha = 0;
-        while (linha != null) {
-            atributos = linha.split(";");
-            if(numeroLinha !=0) {
-                Produto produto = new Produto(Integer.valueOf(atributos[0]), atributos[1], atributos[2], atributos[3],
-                        Double.valueOf(atributos[4]), LocalDateTime.parse(atributos[5]));
-
-                produtoService.incluir(produto);
-            }
-            linha = bufferedReader.readLine();
-            numeroLinha++;
-        }
-    }
 }

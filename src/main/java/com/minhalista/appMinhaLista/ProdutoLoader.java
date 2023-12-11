@@ -1,11 +1,7 @@
 package com.minhalista.appMinhaLista;
 
-import com.minhalista.appMinhaLista.model.domain.Grupo;
-import com.minhalista.appMinhaLista.model.domain.Participante;
 import com.minhalista.appMinhaLista.model.domain.Produto;
-import com.minhalista.appMinhaLista.model.service.GrupoService;
-import com.minhalista.appMinhaLista.model.service.ParticipanteService;
-import com.minhalista.appMinhaLista.model.service.ProdutoService;
+import com.minhalista.appMinhaLista.model.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -14,10 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDateTime;
 
-@Order(3)
+@Order(4)
 @Component
 public class ProdutoLoader implements ApplicationRunner {
     @Autowired
@@ -26,18 +20,20 @@ public class ProdutoLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        final int PRODUCT_NAME = 0;
+        final int PRICE = 1;
+
         FileReader produtoFile = new FileReader("files/produtos.txt");
         BufferedReader produtoBuffer = new BufferedReader(produtoFile);
 
         String linha = produtoBuffer.readLine();
-        String[] atributos = null;
+        String[] atributos = {};
 
         int numeroLinha = 0;
         while (linha != null) {
             atributos = linha.split(";");
             if(numeroLinha !=0) {
-                Produto produto = new Produto(Integer.valueOf(atributos[0]), atributos[1], atributos[2], atributos[3],
-                        Double.valueOf(atributos[4]), LocalDateTime.parse(atributos[5]));
+                Produto produto = new Produto(atributos[PRODUCT_NAME], Double.valueOf(atributos[PRICE]));
 
                 produtoService.incluir(produto);
 
