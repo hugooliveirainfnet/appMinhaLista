@@ -14,8 +14,8 @@ public class GrupoService {
     @Autowired
     private GrupoRepository grupoRepository;
 
-    public void incluir(Grupo grupo) {
-        grupoRepository.save(grupo);
+    public Grupo incluir(Grupo grupo) {
+        return grupoRepository.save(grupo);
     }
 
     public Collection<Grupo> listar() {
