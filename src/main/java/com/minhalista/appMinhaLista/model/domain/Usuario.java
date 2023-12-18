@@ -1,5 +1,6 @@
 package com.minhalista.appMinhaLista.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public class Usuario {
             joinColumns = @JoinColumn(name = "usuarioId"),
             inverseJoinColumns = @JoinColumn(name = "grupoId")
     )
+
     private List<Grupo> grupos = new ArrayList<>();
     private LocalDateTime dataCriacao;
 

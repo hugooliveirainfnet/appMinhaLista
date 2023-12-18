@@ -1,5 +1,6 @@
 package com.minhalista.appMinhaLista.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,10 +28,12 @@ public class Grupo {
     private String imagem;
 
     @ManyToMany(mappedBy = "grupos", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Usuario> usuarios = new ArrayList<Usuario>();
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "grupoId")
+    @JsonIgnore
     private List<Lista> listas;
     private LocalDateTime dataCriacao;
 
