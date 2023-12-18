@@ -26,5 +26,18 @@ public class UsuarioService {
 
     public Optional<Usuario> buscar(Integer id) {
        return usuarioRepository.findById(id);
+
+    }
+
+    public Usuario atualizar(Usuario atualizacao) {
+        Optional<Usuario> usuario = buscar(atualizacao.getId());
+        usuario.get().setNome(atualizacao.getNome());
+        usuario.get().setEmail(atualizacao.getEmail());
+        usuario.get().setTelefone(atualizacao.getTelefone());
+
+        return usuarioRepository.save(usuario.get());
+    }
+    public void excluir(Integer id) {
+        usuarioRepository.deleteById(id);
     }
 }
