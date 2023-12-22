@@ -1,21 +1,18 @@
 package com.minhalista.appMinhaLista.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -33,8 +30,11 @@ public class Usuario {
             joinColumns = @JoinColumn(name = "usuarioId"),
             inverseJoinColumns = @JoinColumn(name = "grupoId")
     )
-
     private List<Grupo> grupos = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "enderecoId")
+    private Endereco endereco;
     private LocalDateTime dataCriacao;
 
     public Usuario(String nome, String email, String telefone) {
@@ -50,7 +50,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return String.format("nome (%s) - email (%s) - telefone (%s) - foto (%s)",
-                nome, email, telefone, foto);
+        return String.format("nome (%s) - email (%s) - telefone (%s) - foto (%s) - Endereco (%s)",
+                nome, email, telefone, foto, endereco);
     }
 }

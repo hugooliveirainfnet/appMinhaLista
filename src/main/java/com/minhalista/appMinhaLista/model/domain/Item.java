@@ -19,6 +19,7 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer quantidade;
+
     private Double valorTotal;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "produtoId")
@@ -28,13 +29,21 @@ public class Item {
     @JoinColumn(name = "listaId")
     private Lista lista;
 
-    public Item(Integer quantidade, Double valorTotal, Produto produto, Lista lista) {
+    public Item(Integer quantidade, Produto produto, Lista lista) {
         this.quantidade = quantidade;
-        this.valorTotal = valorTotal;
         this.produto = produto;
         this.lista = lista;
+        calcularValorTotal();
     }
 
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+        calcularValorTotal();
+    }
+
+    public void calcularValorTotal() {
+        this.valorTotal = quantidade * produto.getPreco();
+    }
     @Override
     public String toString() {
         return String.format("produto (%s) - quantidade (%d) - valorTotal (%.2f) - lista (%s)",
