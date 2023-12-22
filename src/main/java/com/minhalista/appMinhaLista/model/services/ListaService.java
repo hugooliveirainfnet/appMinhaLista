@@ -7,6 +7,7 @@ import com.minhalista.appMinhaLista.model.repositories.ListaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -19,13 +20,22 @@ public class ListaService {
         return listaRepository.save(lista);
     }
     public Collection<Lista> listar(Integer grupoId) {
-        return (Collection<Lista>) listaRepository.findAllByGrupoId(grupoId);
+        Collection<Lista> listas = (Collection<Lista>) listaRepository.findAllByGrupoId(grupoId);
+        for (Lista lista: listas) {
+            lista.calcularValorTotalLista();
+        }
+        return listas;
+
     }
     public Lista buscar(Integer grupoId, Integer listaId) {
-        return listaRepository.findByIdAndGrupoId(grupoId, listaId).get();
+        Lista lista = listaRepository.findByIdAndGrupoId(grupoId, listaId).get();
+        lista.calcularValorTotalLista();
+        return lista;
     }
     public Lista buscar(Integer listaId) {
-        return listaRepository.findById(listaId).get();
+        Lista lista = listaRepository.findById(listaId).get();
+        lista.calcularValorTotalLista();
+        return lista;
     }
 
     public Lista atualizar(ListaInputDto atualizacaoLista) {
