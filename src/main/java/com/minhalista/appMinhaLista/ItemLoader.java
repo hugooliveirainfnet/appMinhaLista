@@ -71,9 +71,10 @@ public class ItemLoader implements ApplicationRunner {
         }
 
         Usuario usuario = usuarioService.buscar(1);
-        Double valor = usuario.getGrupos().get(0).getListas().get(0).calcularValorTotalLista();
+        usuario.getGrupos().get(0).getListas().get(0).calcularValorTotalLista();
 
-        System.out.println("Valor total "+valor);
+        Double valor = usuario.getGrupos().get(0).getListas().get(0).getValorTotal();
+        System.out.println("Valor total "+ valor);
 
         System.out.print("\n");
         itemBuffer.close();
