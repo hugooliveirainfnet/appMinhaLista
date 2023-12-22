@@ -1,9 +1,10 @@
 package com.minhalista.appMinhaLista.controller;
 
+import com.minhalista.appMinhaLista.dto.usuario.UsuarioInputDto;
+import com.minhalista.appMinhaLista.dto.usuario.UsuarioOutputDto;
 import com.minhalista.appMinhaLista.model.domain.Usuario;
 import com.minhalista.appMinhaLista.model.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,29 +19,35 @@ public class UsuarioController {
     UsuarioService usuarioService;
 
     @PostMapping("/usuarios")
-    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
-        Usuario criado = usuarioService.incluir(usuario);
-        return new ResponseEntity<Usuario>(criado, HttpStatus.CREATED);
+    public ResponseEntity<UsuarioOutputDto> criarUsuario(@RequestBody UsuarioInputDto inputDto) {
+        Usuario novoUsuario = usuarioService.criar(inputDto);
+        UsuarioOutputDto outputDto = UsuarioOutputDto.converter2Dto(novoUsuario);
+        return new ResponseEntity<UsuarioOutputDto>(outputDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/usuarios")
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
+    public ResponseEntity<List<UsuarioOutputDto>> listarUsuarios() {
         var usuarios = (List<Usuario>) usuarioService.listar();
-        return ResponseEntity.ok(usuarios);
+        List<UsuarioOutputDto> outputDtos = UsuarioOutputDto.converter2ListDto(usuarios);
+        return ResponseEntity.ok(outputDtos);
     }
 
-    @GetMapping("/usuarios/{id}")
-    public Usuario obterUsuarios(@PathVariable("id") Integer id) {
-        return usuarioService.buscar(id).get();
+    @GetMapping("/usuarios/{usuarioId}")
+    public ResponseEntity<UsuarioOutputDto> obterUsuarios(@PathVariable("usuarioId") Integer usuarioId) {
+        Usuario usuario = usuarioService.buscar(usuarioId);
+        UsuarioOutputDto outputDto = UsuarioOutputDto.converter2Dto(usuario);
+        return ResponseEntity.ok(outputDto);
     }
 
      @PutMapping("/usuarios")
-     public Usuario atualizarUsuario(@RequestBody Usuario usuario) {
-        return usuarioService.atualizar(usuario);
+     public ResponseEntity<UsuarioOutputDto> atualizarUsuario(@RequestBody UsuarioInputDto inputDto) {
+        Usuario usuarioAtualizado = usuarioService.atualizar(inputDto);
+        UsuarioOutputDto outputDto = UsuarioOutputDto.converter2Dto(usuarioAtualizado);
+        return ResponseEntity.ok(outputDto);
      }
 
-    @DeleteMapping("/usuarios/{id}")
-    public void excluirUsuarios(@PathVariable("id") Integer id) {
-        usuarioService.excluir(id);
+    @DeleteMapping("/usuarios/{usuarioId}")
+    public void excluirUsuario(@PathVariable("usuarioId") Integer usuarioId) {
+        usuarioService.excluir(usuarioId);
     }
 }
