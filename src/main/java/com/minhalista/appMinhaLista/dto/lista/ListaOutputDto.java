@@ -14,6 +14,7 @@ public class ListaOutputDto {
     private String nome;
     private String imagem;
     private String descricao;
+    private Double valorTotal;
     private List<ItemOutputDto> itens;
 
     public static ListaOutputDto converter2Dto(Lista l){
@@ -22,6 +23,7 @@ public class ListaOutputDto {
         dto.setNome(l.getNome());
         dto.setImagem(l.getImagem());
         dto.setDescricao(l.getDescricao());
+        dto.setValorTotal(l.getValorTotal());
         dto.itens = ItemOutputDto.converter2ListDto(l.getItens());
         return dto;
     }

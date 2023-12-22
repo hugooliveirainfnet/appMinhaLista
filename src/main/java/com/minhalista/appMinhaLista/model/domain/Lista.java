@@ -24,6 +24,8 @@ public class Lista {
     private Integer id;
     private String nome;
     private String imagem;
+    private String descricao;
+    private Double valorTotal;
     @ManyToOne
     @JoinColumn(name = "grupoId")
     private Grupo grupo;
@@ -44,16 +46,15 @@ public class Lista {
         this.nome = nome;
         this.grupo = grupo;
         this.dataCriacao = LocalDateTime.now();
+        calcularValorTotalLista();
     }
 
-    public Double calcularValorTotalLista() {
+    public void calcularValorTotalLista() {
         Double valorTotal = 0.0;
         for (Item item : itens) {
-            Double valorItem = item.getProduto().getPreco();
-            int quantidade = item.getQuantidade();
-            valorTotal += valorItem * quantidade;
+            valorTotal += item.getValorTotal();
         }
-        return valorTotal;
+        this.valorTotal = valorTotal;
     }
 
     @Override
