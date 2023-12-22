@@ -1,5 +1,6 @@
 package com.minhalista.appMinhaLista;
 
+import com.minhalista.appMinhaLista.dto.item.ItemInputDto;
 import com.minhalista.appMinhaLista.model.domain.Item;
 import com.minhalista.appMinhaLista.model.domain.Lista;
 import com.minhalista.appMinhaLista.model.domain.Produto;
@@ -54,11 +55,11 @@ public class ItemLoader implements ApplicationRunner {
             atributos = linha.split(";");
             if(numeroLinha !=0) {
 
-                Produto produto = produtoService.buscar(Integer.valueOf(atributos[PRODUCT])).get();
-                Lista lista = listaService.buscar(Integer.valueOf(atributos[LIST])).get();
+                ItemInputDto inputDto = new ItemInputDto();
+                inputDto.setProdutoId(Integer.valueOf(atributos[PRODUCT]));
+                inputDto.setQuantidade(Integer.valueOf(atributos[AMOUNT]));
 
-                Item item = new Item(Integer.valueOf(atributos[AMOUNT]), Double.valueOf(atributos[AMOUNT_PAY]), produto, lista);
-                itemService.incluir(item);
+                itemService.criar(Integer.valueOf(atributos[LIST]), inputDto);
 
             }
             linha = itemBuffer.readLine();
@@ -69,8 +70,8 @@ public class ItemLoader implements ApplicationRunner {
             System.out.println("[ITEM] " + item);
         }
 
-        Optional<Usuario> usuario = usuarioService.buscar(1);
-        Double valor = usuario.get().getGrupos().get(0).getListas().get(0).calcularValorTotalLista();
+        Usuario usuario = usuarioService.buscar(1);
+        Double valor = usuario.getGrupos().get(0).getListas().get(0).calcularValorTotalLista();
 
         System.out.println("Valor total "+valor);
 

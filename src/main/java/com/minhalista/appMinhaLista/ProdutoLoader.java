@@ -35,7 +35,7 @@ public class ProdutoLoader implements ApplicationRunner {
             if(numeroLinha !=0) {
                 Produto produto = new Produto(atributos[PRODUCT_NAME], Double.valueOf(atributos[PRICE]));
 
-                produtoService.incluir(produto);
+                produtoService.criar(produto);
 
             }
             linha = produtoBuffer.readLine();

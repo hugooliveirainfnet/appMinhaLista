@@ -1,5 +1,6 @@
 package com.minhalista.appMinhaLista;
 
+import com.minhalista.appMinhaLista.dto.usuario.UsuarioInputDto;
 import com.minhalista.appMinhaLista.model.domain.Usuario;
 
 import com.minhalista.appMinhaLista.model.services.UsuarioService;
@@ -24,6 +25,7 @@ public class UsuarioLoader implements ApplicationRunner {
         final int USER_NAME = 0;
         final int USER_EMAIL = 1;
         final int USER_TELEFONE = 2;
+        final int USER_CEP = 3;
 
         FileReader usuarioFile = new FileReader("files/usuarios.txt");
         BufferedReader usuarioBuffer = new BufferedReader(usuarioFile);
@@ -36,7 +38,14 @@ public class UsuarioLoader implements ApplicationRunner {
             atributos = linha.split(";");
             if(numeroLinha !=0) {
                 Usuario usuario = new Usuario(atributos[USER_NAME], atributos[USER_EMAIL], atributos[USER_TELEFONE]);
-                usuarioService.incluir(usuario);
+                UsuarioInputDto inputDto = new UsuarioInputDto();
+                inputDto.setId(usuario.getId());
+                inputDto.setNome(usuario.getNome());
+                inputDto.setEmail(usuario.getEmail());
+                inputDto.setTelefone(usuario.getTelefone());
+                inputDto.setFoto(usuario.getFoto());
+                inputDto.setCep(atributos[USER_CEP]);
+                usuarioService.criar(inputDto);
             }
             linha = usuarioBuffer.readLine();
             numeroLinha++;

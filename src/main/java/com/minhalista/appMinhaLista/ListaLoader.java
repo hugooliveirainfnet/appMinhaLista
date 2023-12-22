@@ -37,16 +37,16 @@ public class ListaLoader implements ApplicationRunner {
         while (linha != null) {
             atributos = linha.split(";");
             if(numeroLinha !=0) {
-                Grupo grupo = grupoService.buscar(Integer.valueOf(atributos[GROUP])).get();
+                Grupo grupo = grupoService.buscar(Integer.valueOf(atributos[GROUP]));
                 Lista lista = new Lista(atributos[LIST_NAME], grupo);
-                listaService.incluir(lista);
+                listaService.criar(lista);
 
             }
             linha = listaBruffer.readLine();
             numeroLinha++;
         }
 
-        for(Lista lista : listaService.listar()) {
+        for(Lista lista : listaService.listar(Integer.valueOf(atributos[GROUP]))) {
             System.out.println("[LISTA] " + lista);
         }
         System.out.print("\n");

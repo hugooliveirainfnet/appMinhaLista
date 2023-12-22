@@ -1,5 +1,7 @@
 package com.minhalista.appMinhaLista;
 
+import com.minhalista.appMinhaLista.dto.grupo.GrupoInputDto;
+import com.minhalista.appMinhaLista.dto.integrante.IntegranteInputDto;
 import com.minhalista.appMinhaLista.model.domain.*;
 import com.minhalista.appMinhaLista.model.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,18 +43,20 @@ public class GrupoLoader implements ApplicationRunner {
                 Grupo grupo = null;
                 Usuario usuario;
                 for (String integrante :integrantes) {
-                    usuario = usuarioService.buscar(Integer.valueOf(integrante)).get() ;
                     if(grupo==null) {
-                        grupo = new Grupo(atributos[GROUP_NAME], usuario);
-                        grupo = grupoService.incluir(grupo);
+                        usuario = usuarioService.buscar(Integer.valueOf(integrante));
+                        GrupoInputDto inputDto = new GrupoInputDto(null, atributos[GROUP_NAME], null);
+                        grupo = grupoService.criar(Integer.valueOf(integrante), inputDto);
                     }
                     else{
-                        grupo.setUsuario(usuario);
+                        IntegranteInputDto inputDto = new IntegranteInputDto();
+                        inputDto.setUsuarioId(Integer.valueOf(integrante));
+                        grupoService.incluirIntegrante(grupo.getId(), inputDto);
                     }
-                    usuario.setGrupo(grupo);
-                    usuarioService.incluir(usuario);
+//                    usuario.setGrupo(grupo);
+//                    usuarioService.incluir(usuario);
                 }
-                grupo = grupoService.incluir(grupo);
+//                grupo = grupoService.atualizar(grupo);
             }
             linha = grupoBruffer.readLine();
             numeroLinha++;
