@@ -1,22 +1,25 @@
 package com.minhalista.appMinhaLista.model.services;
 
-import com.minhalista.appMinhaLista.model.domain.Integrante;
+import com.minhalista.appMinhaLista.dto.usuario.UsuarioInputDto;
+import com.minhalista.appMinhaLista.model.domain.Endereco;
 import com.minhalista.appMinhaLista.model.domain.Usuario;
-import com.minhalista.appMinhaLista.model.repositories.IntegranteRepository;
 import com.minhalista.appMinhaLista.model.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private EnderecoService enderecoService;
 
-    public Usuario incluir(Usuario usuario) {
+    public Usuario criar(UsuarioInputDto inputDto) {
+        Endereco endereco = enderecoService.buscarCep(inputDto.getCep());
+        Usuario usuario = UsuarioInputDto.converter2Model(inputDto);
+        usuario.setEndereco(endereco);
         return usuarioRepository.save(usuario);
     }
 
@@ -24,19 +27,18 @@ public class UsuarioService {
         return (Collection<Usuario>) usuarioRepository.findAll();
     }
 
-    public Optional<Usuario> buscar(Integer id) {
-       return usuarioRepository.findById(id);
-
+    public Usuario buscar(Integer id) {
+       return usuarioRepository.findById(id).get();
     }
 
-    public Usuario atualizar(Usuario atualizacao) {
-        Optional<Usuario> usuario = buscar(atualizacao.getId());
-        usuario.get().setNome(atualizacao.getNome());
-        usuario.get().setEmail(atualizacao.getEmail());
-        usuario.get().setTelefone(atualizacao.getTelefone());
-
-        return usuarioRepository.save(usuario.get());
+    public Usuario atualizar(UsuarioInputDto atualizacaoUsuario) {
+        Usuario usuario = usuarioRepository.findById(atualizacaoUsuario.getId()).get();
+        usuario.setNome(atualizacaoUsuario.getNome());
+        usuario.setEmail(atualizacaoUsuario.getEmail());
+        usuario.setTelefone(atualizacaoUsuario.getTelefone());
+        return usuarioRepository.save(usuario);
     }
+
     public void excluir(Integer id) {
         usuarioRepository.deleteById(id);
     }
