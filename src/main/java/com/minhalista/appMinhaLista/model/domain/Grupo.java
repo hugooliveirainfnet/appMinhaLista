@@ -1,6 +1,8 @@
 package com.minhalista.appMinhaLista.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,24 +29,30 @@ public class Grupo {
     private String nome;
     private String imagem;
 
-    @ManyToMany(mappedBy = "grupos", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "grupos", cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Usuario> usuarios = new ArrayList<Usuario>();
 
+    @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Integrante> integrantes = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "grupoId")
-    @JsonIgnore
-    private List<Lista> listas;
+    private List<Lista> listas = new ArrayList<>();
     private LocalDateTime dataCriacao;
 
     public Grupo(String nome, Usuario usuario) {
         this.nome = nome;
-        this.usuarios.add(usuario);
+        this.setIntegrante(new Integrante(usuario, this));
         this.dataCriacao = LocalDateTime.now();
     }
 
     public void setUsuario(Usuario usuario) {
         this.usuarios.add(usuario);
+    }
+
+    public void setIntegrante(Integrante integrante) {
+        this.integrantes.add(integrante);
     }
 
     public void setLista(Lista lista) { this.listas.add(lista); }
